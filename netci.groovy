@@ -142,7 +142,7 @@ def CreateLinuxBuildTasks = { machine, configTag, linuxBranch, nonDefaultTaskSet
                     }
                 }
 
-                def archivalString = "BuildLinux/build.log"
+                def archivalString = "Build/clang_build/x64_${buildType}/build.log"
                 Utilities.addArchival(newJob, archivalString,
                     '', // no exclusions from archival
                     true, // doNotFailIfNothingArchived=false ~= failIfNothingArchived (true ~= doNotFail)
