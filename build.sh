@@ -98,6 +98,13 @@ TARGET_PATH=0
 CMAKE_EXPORT_COMPILE_COMMANDS="-DCMAKE_EXPORT_COMPILE_COMMANDS=ON"
 LIBS_ONLY_BUILD=
 
+if [ -n "$CC" ]; then
+    _CC=$CC
+fi
+if [ -n "$CXX" ]; then
+    _CXX=$CXX
+fi
+
 if [ -f "/proc/version" ]; then
     OS_LINUX=1
     PROC_INFO=$(cat /proc/version)
