@@ -145,6 +145,7 @@ namespace Js
         static bool Equals(Var aLeft, Var aRight);
         static bool LessThan(Var aLeft, Var aRight);
         static bool IsNegZero(JavascriptString *string);
+        static Var  AddString(Var string1, Var string2, Js::ScriptContext* scriptContext);
 
         static uint strstr(JavascriptString *string, JavascriptString *substring, bool useBoyerMoore, uint start=0);
         static int strcmp(JavascriptString *string1, JavascriptString *string2);

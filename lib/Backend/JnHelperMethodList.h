@@ -99,6 +99,7 @@ HELPERCALL_FULL_OR_INPLACE_MATH(Op_Negate, Js::JavascriptMath::Negate, Js::SSE2:
 HELPERCALL_FULL_OR_INPLACE_MATH(Op_Not, Js::JavascriptMath::Not, Js::SSE2::JavascriptMath::Not, AttrCanThrow)
 
 HELPERCALL_MATH(Op_AddLeftDead, Js::JavascriptMath::AddLeftDead, Js::SSE2::JavascriptMath::AddLeftDead, AttrCanThrow)
+HELPERCALL(Op_AddString, Js::JavascriptString::AddString, AttrCanThrow)
 HELPERCALL_FULL_OR_INPLACE_MATH(Op_Add, Js::JavascriptMath::Add, Js::SSE2::JavascriptMath::Add, AttrCanThrow)
 HELPERCALL_FULL_OR_INPLACE_MATH(Op_Divide, Js::JavascriptMath::Divide, Js::SSE2::JavascriptMath::Divide, AttrCanThrow)
 HELPERCALL_FULL_OR_INPLACE_MATH(Op_Modulus, Js::JavascriptMath::Modulus, Js::SSE2::JavascriptMath::Modulus, AttrCanThrow)

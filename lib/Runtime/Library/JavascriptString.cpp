@@ -12,6 +12,8 @@
 #include "../Backend/JITRecyclableObject.h"
 #endif
 
+#include "JavascriptMath.h"
+
 namespace Js
 {
     // White Space characters are defined in ES 2017 Section 11.2 #sec-white-space
@@ -2737,6 +2739,22 @@ case_2:
     bool JavascriptString::IsNegZero(JavascriptString *string)
     {
         return string->GetLength() == 2 && wmemcmp(string->GetString(), _u("-0"), 2) == 0;
+    }
+
+    Var JavascriptString::AddString(Var string1, Var string2, Js::ScriptContext* scriptContext)
+    {
+        if (RecyclableObject::Is(string1) &&
+            RecyclableObject::Is(string2))
+        {
+            if (JavascriptString::Is(string1) &&
+                JavascriptString::Is(string2))
+            {
+                wprintf(L"We need to add!");
+                return string1;
+            }
+        }
+
+        return JavascriptMath::Add(string1, string2, scriptContext);
     }
 
     void JavascriptString::FinishCopy(__inout_xcount(m_charLength) char16 *const buffer, StringCopyInfoStack &nestedStringTreeCopyInfos)

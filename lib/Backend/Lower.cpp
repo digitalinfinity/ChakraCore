@@ -1269,6 +1269,11 @@ Lowerer::LowerRange(IR::Instr *instrStart, IR::Instr *instrEnd, bool defaultDoFa
                 Assert(instr->GetDst()->GetType() == instr->GetSrc2()->GetType());
                 m_lowererMD.LowerToFloat(instr);
             }
+            else if (instr->GetSrc1()->GetValueType().IsLikelyString() &&
+                instr->GetSrc1()->GetValueType().IsLikelyString())
+            {
+                this->LowerBinaryHelperMem(instr, IR::HelperOp_AddString);
+            }
             else if (PHASE_OFF(Js::MathFastPathPhase, this->m_func) || noMathFastPath)
             {
                 this->LowerBinaryHelperMem(instr, IR::HelperOp_Add);
