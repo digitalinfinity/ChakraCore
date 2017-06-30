@@ -84,6 +84,7 @@ namespace Js
         Field(DynamicProfileInfoList*) profileInfoList;
 #endif
 #endif
+        Field(ConcatStringCache *) concatStringCache;
     };
 
     class MissingPropertyTypeHandler;

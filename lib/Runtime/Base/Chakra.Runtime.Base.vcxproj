@@ -77,6 +77,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CompactCounters.h" />
+    <ClInclude Include="ConcatStringCache.h" />
     <ClInclude Include="ittnotify_config.h" />
     <ClInclude Include="ittnotify_types.h" />
     <ClInclude Include="jitprofiling.h" />

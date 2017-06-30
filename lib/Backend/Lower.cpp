@@ -1269,7 +1269,9 @@ Lowerer::LowerRange(IR::Instr *instrStart, IR::Instr *instrEnd, bool defaultDoFa
                 Assert(instr->GetDst()->GetType() == instr->GetSrc2()->GetType());
                 m_lowererMD.LowerToFloat(instr);
             }
-            else if (instr->GetSrc1()->GetValueType().IsLikelyString() &&
+            else if (
+                !PHASE_OFF(Js::ConcatStringCachePhase, this->m_func) &&
+                instr->GetSrc1()->GetValueType().IsLikelyString() &&
                 instr->GetSrc1()->GetValueType().IsLikelyString())
             {
                 this->LowerBinaryHelperMem(instr, IR::HelperOp_AddString);

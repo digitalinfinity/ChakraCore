@@ -1222,6 +1222,8 @@ namespace Js
         srcInfo->sourceContextInfo = this->Cache()->noContextSourceContextInfo;
         srcInfo->moduleID = kmodGlobal;
         this->Cache()->noContextGlobalSourceInfo = srcInfo;
+
+        this->Cache()->concatStringCache = nullptr;
     }
 
     void ScriptContext::InitializePreGlobal()
@@ -5062,6 +5064,43 @@ void ScriptContext::RegisterPrototypeChainEnsuredToHaveOnlyWritableDataPropertie
     CharClassifier const * ScriptContext::GetCharClassifier(void) const
     {
         return this->charClassifier;
+    }
+
+    Js::JavascriptString* ScriptContext::GetConcatCacheString(const Js::ConcatStringCacheKey& key)
+    {
+        auto concatCache = Cache()->concatStringCache;
+        if (concatCache != nullptr)
+        {
+            Js::JavascriptString* value;
+            if (concatCache->TryGetValue(key, &value))
+            {
+                PHASE_PRINT_TRACE1(Js::ConcatStringCachePhase, L"Cache hit [(0x%p, 0x%p), 0x%p]\n", key.left, key.right, value);
+                return value;
+            }
+        }
+
+        return nullptr;
+    }
+
+    void ScriptContext::AddConcatCacheString(const Js::ConcatStringCacheKey& key, Js::JavascriptString* concat)
+    {
+        auto concatCache = Cache()->concatStringCache;
+        if (concatCache == nullptr)
+        {
+#if ENABLE_DEBUG_CONFIG_OPTIONS
+            const int maxCacheSize = CONFIG_FLAG(ConcatStringCacheSize);
+#else
+            const int maxCacheSize = 16;
+#endif
+            concatCache = Js::ConcatStringCache::New(this->GeneralAllocator(), 
+                maxCacheSize <= 0 ? 16 : maxCacheSize);
+            Cache()->concatStringCache = concatCache;
+        }
+
+        // TODO: confirm that GeneralAllocator::Alloc throws
+        concatCache->Add(key, concat);
+
+        PHASE_PRINT_TRACE1(Js::ConcatStringCachePhase, L"Cache add [(0x%p, 0x%p), 0x%p]\n", key.left, key.right, concat);
     }
 
     void ScriptContext::OnStartupComplete()

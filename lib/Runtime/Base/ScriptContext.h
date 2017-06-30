@@ -1044,6 +1044,9 @@ private:
         ScriptConfiguration const * GetConfig(void) const { return &config; }
         CharClassifier const * GetCharClassifier(void) const;
 
+        Js::JavascriptString* GetConcatCacheString(const Js::ConcatStringCacheKey& key);
+        void AddConcatCacheString(const Js::ConcatStringCacheKey& key, Js::JavascriptString* concat);
+
         ThreadContext * GetThreadContext() const { return threadContext; }
 
         static const int MaxEvalSourceSize = 400;

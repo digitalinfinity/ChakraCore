@@ -2749,8 +2749,22 @@ case_2:
             if (JavascriptString::Is(string1) &&
                 JavascriptString::Is(string2))
             {
-                wprintf(L"We need to add!");
-                return string1;
+                Js::ConcatStringCacheKey key;
+                key.left = Js::JavascriptString::FromVar(string1);
+                key.right = Js::JavascriptString::FromVar(string2);
+
+                Js::JavascriptString* concatString = scriptContext->GetConcatCacheString(key);
+
+                if (concatString == nullptr)
+                {
+                    PHASE_PRINT_TRACE1(Js::ConcatStringCachePhase, L"Cache miss [(0x%p, 0x%p)]\n", string1, string2);
+                    concatString = JavascriptString::Concat(key.left, key.right);
+                    scriptContext->AddConcatCacheString(key, concatString);
+                }
+
+                Assert(concatString != nullptr);
+
+                return concatString;
             }
         }
 
