@@ -4487,6 +4487,14 @@ namespace Js
             GetDynamicRegexMap()->RemoveRecentlyUnusedItems();
         }
 
+        // This list is on the arena so after a GC, it could
+        // contain invalid items. For simplicity, just clear the list
+        ConcatStringCache* concatCache = Cache()->concatStringCache;
+        if (concatCache != nullptr)
+        {
+            concatCache->Clear();
+        }
+
         CleanSourceListInternal(true);
     }
 

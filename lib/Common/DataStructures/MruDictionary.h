@@ -201,6 +201,13 @@ namespace JsUtil
                 AddToDictionary(entry);
         }
 
+        void Clear()
+        {
+            dictionary.Clear();
+            entries.Clear();
+            mruListCount = 0;
+        }
+
         PREVENT_COPY(MruDictionary);
     };
 }
