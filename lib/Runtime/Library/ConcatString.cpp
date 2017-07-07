@@ -29,7 +29,8 @@ namespace Js
 
     /////////////////////// ConcatStringBase //////////////////////////
 
-    ConcatStringBase::ConcatStringBase(StaticType* stringType) : LiteralString(stringType)
+    ConcatStringBase::ConcatStringBase(StaticType* stringType) : LiteralString(stringType),
+        hasOnlyLiterals(true)
     {
     }
 
@@ -117,6 +118,12 @@ namespace Js
 
         m_slots[0] = a;
         m_slots[1] = b;
+
+        if (!VirtualTableInfo<Js::LiteralString>::HasVirtualTable(a) ||
+            !VirtualTableInfo<Js::LiteralString>::HasVirtualTable(b))
+        {
+            this->SetHasNonLiteral();
+        }
 
         this->SetLength(a->GetLength() + b->GetLength()); // does not include null character
     }
@@ -234,6 +241,10 @@ namespace Js
 
         len += str->GetLength();
         this->SetLength(len);
+        if (!VirtualTableInfo<Js::LiteralString>::HasVirtualTable(str))
+        {
+            this->SetHasNonLiteral();
+        }
     }
 
     // Allocate slots, set m_slots and m_slotCount.
@@ -376,6 +387,11 @@ namespace Js
         value = CompoundString::GetImmutableOrScriptUnreferencedString(value);
         this->SetLength(this->GetLength() + value->GetLength());
         m_slots[index] = value;
+
+        if (!VirtualTableInfo<Js::LiteralString>::HasVirtualTable(value))
+        {
+            this->SetHasNonLiteral();
+        }
     }
 
 #if DBG

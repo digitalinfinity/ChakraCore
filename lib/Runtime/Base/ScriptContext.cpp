@@ -4489,12 +4489,7 @@ namespace Js
 
         // This list is on the arena so after a GC, it could
         // contain invalid items. For simplicity, just clear the list
-        ConcatStringCache* concatCache = Cache()->concatStringCache;
-        if (concatCache != nullptr)
-        {
-            concatCache->Clear();
-        }
-
+        Cache()->concatStringCache = nullptr;
         CleanSourceListInternal(true);
     }
 
@@ -5083,6 +5078,8 @@ void ScriptContext::RegisterPrototypeChainEnsuredToHaveOnlyWritableDataPropertie
             if (concatCache->TryGetValue(key, &value))
             {
                 PHASE_PRINT_TRACE1(Js::ConcatStringCachePhase, L"Cache hit [(0x%p, 0x%p), 0x%p]\n", key.left, key.right, value);
+                PHASE_PRINT_TRACE1(Js::ConcatStringCachePhase, L"\tLeft: %s\n", key.left->GetSz());
+                PHASE_PRINT_TRACE1(Js::ConcatStringCachePhase, L"\tRight: %s\n", key.right->GetSz());
                 return value;
             }
         }
@@ -5100,13 +5097,14 @@ void ScriptContext::RegisterPrototypeChainEnsuredToHaveOnlyWritableDataPropertie
 #else
             const int maxCacheSize = 16;
 #endif
-            concatCache = Js::ConcatStringCache::New(this->GeneralAllocator(), 
+            concatCache = Js::ConcatStringCache::New(this->recycler, 
                 maxCacheSize <= 0 ? 16 : maxCacheSize);
             Cache()->concatStringCache = concatCache;
         }
 
         // TODO: confirm that GeneralAllocator::Alloc throws
         concatCache->Add(key, concat);
+        concatCache->RemoveRecentlyUnusedItems();
 
         PHASE_PRINT_TRACE1(Js::ConcatStringCachePhase, L"Cache add [(0x%p, 0x%p), 0x%p]\n", key.left, key.right, concat);
     }

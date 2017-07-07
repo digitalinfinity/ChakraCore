@@ -44,6 +44,8 @@ namespace Js
     class ConcatStringBase _ABSTRACT : public LiteralString // vtable will be switched to LiteralString's vtable after flattening
     {
         friend JavascriptString;
+    private:
+        bool hasOnlyLiterals;
 
     protected:
         ConcatStringBase(StaticType* stringTypeStatic);
@@ -61,6 +63,16 @@ namespace Js
         virtual const char16* GetSz() = 0;     // Force subclass to call GetSzImpl with the real type to avoid virtual calls
         using JavascriptString::Copy;
         virtual bool IsTree() const override sealed;
+
+        bool HasOnlyLiterals()
+        {
+            return hasOnlyLiterals;
+        }
+
+        void SetHasNonLiteral()
+        {
+            hasOnlyLiterals = false;
+        }
     };
 
     // Concat string with N (or less) child nodes.

@@ -12,7 +12,7 @@ namespace Js
         Js::JavascriptString* right;
     };
 
-    typedef JsUtil::MruDictionary<ConcatStringCacheKey, Js::JavascriptString*, Memory::ArenaAllocator> ConcatStringCache;
+    typedef JsUtil::MruDictionary<ConcatStringCacheKey, Js::JavascriptString*> ConcatStringCache;
 };
 
 template <>

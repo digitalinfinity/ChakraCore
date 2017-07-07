@@ -81,6 +81,11 @@ namespace Js
         m_slots[index] = value;
         charcount_t newTotalLen = this->GetLength() - oldItemLen + newItemLen;
         this->SetLength(newTotalLen);
+
+        if (!VirtualTableInfo<Js::LiteralString>::HasVirtualTable(value))
+        {
+            this->SetHasNonLiteral();
+        }
     }
 
     template<int N>

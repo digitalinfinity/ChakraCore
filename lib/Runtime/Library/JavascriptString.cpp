@@ -2746,7 +2746,9 @@ case_2:
         if (RecyclableObject::Is(string1) &&
             RecyclableObject::Is(string2))
         {
-            if (JavascriptString::Is(string1) &&
+            if (VirtualTableInfo<Js::LiteralString>::HasVirtualTable(string1) &&
+                // VirtualTableInfo<Js::LiteralString>::HasVirtualTable(string2) &&
+                JavascriptString::Is(string1) &&
                 JavascriptString::Is(string2))
             {
                 Js::ConcatStringCacheKey key;
@@ -2758,6 +2760,8 @@ case_2:
                 if (concatString == nullptr)
                 {
                     PHASE_PRINT_TRACE1(Js::ConcatStringCachePhase, L"Cache miss [(0x%p, 0x%p)]\n", string1, string2);
+                    PHASE_PRINT_TRACE1(Js::ConcatStringCachePhase, L"\tLeft: %s\n", key.left->GetSz());
+                    PHASE_PRINT_TRACE1(Js::ConcatStringCachePhase, L"\tRight: %s\n", key.right->GetSz());
                     concatString = JavascriptString::Concat(key.left, key.right);
                     scriptContext->AddConcatCacheString(key, concatString);
                 }
