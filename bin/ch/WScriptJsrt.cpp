@@ -819,7 +819,6 @@ bool WScriptJsrt::InstallObjectsOnObject(JsValueRef object, const char* name,
 bool WScriptJsrt::Initialize()
 {
     HRESULT hr = S_OK;
-    char CH_BINARY_LOCATION[2048];
 #ifdef CHAKRA_STATIC_LIBRARY
     const char* LINK_TYPE = "static";
 #else
@@ -889,15 +888,16 @@ bool WScriptJsrt::Initialize()
       linkValue, true), false);
 
     // Set Binary Location
-    JsValueRef binaryPathValue;
-    PlatformAgnostic::SystemInfo::GetBinaryLocation(CH_BINARY_LOCATION, sizeof(CH_BINARY_LOCATION));
+    char chBinaryLocation[2048];
+    charcount_t chBinaryLocationLength = 0;
+    IfFailGo(ChakraRTInterface::GetBinaryLocation(chBinaryLocation, _countof(chBinaryLocation), &chBinaryLocationLength));
 
+    JsValueRef binaryPathValue;
     JsPropertyIdRef binaryPathProperty;
     IfJsrtErrorFail(CreatePropertyIdFromString("BINARY_PATH", &binaryPathProperty), false);
 
     IfJsrtErrorFail(ChakraRTInterface::JsCreateString(
-        CH_BINARY_LOCATION,
-        strlen(CH_BINARY_LOCATION), &binaryPathValue), false);
+        chBinaryLocation, chBinaryLocationLength, &binaryPathValue), false);
     IfJsrtErrorFail(ChakraRTInterface::JsSetProperty(
         platformObject, binaryPathProperty, binaryPathValue, true), false);
 

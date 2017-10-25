@@ -556,7 +556,15 @@ void GetBinaryPathWithFileNameA(char *path, const size_t buffer_size, const char
     char dir[_MAX_DIR];
 
     char modulename[_MAX_PATH];
-    PlatformAgnostic::SystemInfo::GetBinaryLocation(modulename, _MAX_PATH);
+    charcount_t modulenameLength = 0;
+
+    HRESULT hr = ChakraRTInterface::GetBinaryLocation(modulename, _countof(modulename), &modulenameLength);
+    if (FAILED(hr)) 
+    {
+        path[0] = '\0';
+        return;
+    }
+
     _splitpath_s(modulename, drive, _MAX_DRIVE, dir, _MAX_DIR, nullptr, 0, nullptr, 0);
     _makepath_s(fullpath, drive, dir, filename, nullptr);
 

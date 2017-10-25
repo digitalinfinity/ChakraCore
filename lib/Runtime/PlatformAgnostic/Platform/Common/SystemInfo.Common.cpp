@@ -15,11 +15,10 @@
 
 namespace PlatformAgnostic
 {
-    void SystemInfo::GetBinaryLocation(char *path, const unsigned size)
+    bool SystemInfo::GetBinaryLocation(char* const path, const charcount_t size, const charcount_t* resultStrLength)
     {
-        // TODO: make AssertMsg available under PlatformAgnostic
-        //AssertMsg(path != nullptr, "Path can not be nullptr");
-        //AssertMsg(size < INT_MAX, "Isn't it too big for a path buffer?");
+        if (path == nullptr || resultStrLength == nullptr || size > UINT_MAX) return false;
+
 #ifdef __APPLE__
         uint32_t path_size = (uint32_t)size;
         char *tmp = nullptr;
@@ -27,7 +26,7 @@ namespace PlatformAgnostic
         if (_NSGetExecutablePath(path, &path_size))
         {
             SET_BINARY_PATH_ERROR_MESSAGE(path, "GetBinaryLocation: _NSGetExecutablePath has failed.");
-            return;
+            return false;
         }
 
         tmp = (char*)malloc(size);
@@ -47,6 +46,9 @@ namespace PlatformAgnostic
 #else
         #warning "Implement GetBinaryLocation for this platform"
 #endif
+
+        *resultStrLength = str_len;
+        return true;
     }
 
 } // namespace PlatformAgnostic

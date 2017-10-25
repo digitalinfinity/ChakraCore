@@ -18,6 +18,16 @@ HRESULT __stdcall SetConfigFlags(__in int argc, __in_ecount(argc) LPWSTR argv[],
     return S_OK;
 }
 
+HRESULT __stdcall GetBinaryLocation(__in_ecount(cchBuffer) char* const buffer, __in const charcount_t cchBuffer, charcount_t* const resultStrLength)
+{
+    if (!PlatformAgnostic::SystemInfo::GetBinaryLocation(buffer, cchBuffer, resultStrLength))
+    {
+        return E_FAIL;
+    }
+
+    return S_OK;
+}
+
 HRESULT __stdcall PrintConfigFlagsUsageString()
 {
     Js::ConfigFlagsTable::PrintUsageString();
@@ -144,6 +154,7 @@ HRESULT OnChakraCoreLoaded(OnChakraCoreLoadedPtr pfChakraCoreLoaded)
         PrintConfigFlagsUsageString,
         SetAssertToConsoleFlag,
         SetEnableCheckMemoryLeakOutput,
+        GetBinaryLocation,
 
 #define FLAG(type, name, description, defaultValue, ...) FLAG_##type##(name)
 #define FLAGINCLUDE(name) \

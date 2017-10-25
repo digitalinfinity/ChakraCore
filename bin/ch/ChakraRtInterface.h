@@ -283,6 +283,11 @@ public:
 #endif
     }
 
+    static HRESULT GetBinaryLocation(char* const buffer, const charcount_t cchBuffer, charcount_t* const resultStrLength)
+    {
+        return CHECKED_CALL(GetBinaryLocation, buffer, cchBuffer, resultStrLength);
+    }
+
 #ifdef _WIN32
 #if ENABLE_NATIVE_CODEGEN
     static void ConnectJITServer(HANDLE processHandle, void* serverSecurityDescriptor, UUID connectionId)

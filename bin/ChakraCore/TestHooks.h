@@ -21,11 +21,13 @@ struct TestHooks
     typedef HRESULT(TESTHOOK_CALL *SetAssertToConsoleFlagPtr)(bool flag);
     typedef HRESULT(TESTHOOK_CALL *SetEnableCheckMemoryLeakOutputPtr)(bool flag);
     typedef void(TESTHOOK_CALL * NotifyUnhandledExceptionPtr)(PEXCEPTION_POINTERS exceptionInfo);
+    typedef HRESULT(TESTHOOK_CALL * GetBinaryLocationPtr)(char* const buffer, const charcount_t cchBuffer, charcount_t* const resultStrLength);
 
     SetConfigFlagsPtr pfSetConfigFlags;
     PrintConfigFlagsUsageStringPtr pfPrintConfigFlagsUsageString;
     SetAssertToConsoleFlagPtr pfSetAssertToConsoleFlag;
     SetEnableCheckMemoryLeakOutputPtr pfSetEnableCheckMemoryLeakOutput;
+    GetBinaryLocationPtr pfGetBinaryLocation;
 
 #define FLAG(type, name, description, defaultValue, ...) FLAG_##type##(name)
 #define FLAG_String(name) \
