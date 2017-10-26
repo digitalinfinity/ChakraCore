@@ -13,9 +13,12 @@
 #include <unistd.h> // readlink
 #endif
 
+// Defined in PAL
+extern errno_t __cdecl strcpy_s(char *_Dst, size_t _SizeInBytes, const char *_Src);
+
 namespace PlatformAgnostic
 {
-    bool SystemInfo::GetBinaryLocation(char* const path, const charcount_t size, const charcount_t* resultStrLength)
+    bool SystemInfo::GetBinaryLocation(char* const path, const charcount_t size, charcount_t* const resultStrLength)
     {
         if (path == nullptr || resultStrLength == nullptr || size > UINT_MAX) return false;
 
@@ -25,7 +28,7 @@ namespace PlatformAgnostic
         int str_len;
         if (_NSGetExecutablePath(path, &path_size))
         {
-            SET_BINARY_PATH_ERROR_MESSAGE(path, "GetBinaryLocation: _NSGetExecutablePath has failed.");
+            strcpy_s(path, size, "GetBinaryLocation: _NSGetExecutablePath has failed.");
             return false;
         }
 
@@ -39,7 +42,7 @@ namespace PlatformAgnostic
         int str_len = readlink("/proc/self/exe", path, size - 1);
         if (str_len <= 0)
         {
-            SET_BINARY_PATH_ERROR_MESSAGE(path, "GetBinaryLocation: /proc/self/exe has failed.");
+            strcpy_s(path, size,  "GetBinaryLocation: /proc/self/exe has failed.");
             return;
         }
         path[str_len] = char(0);

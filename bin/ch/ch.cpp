@@ -10,6 +10,12 @@
 #include <fcntl.h>
 #endif
 
+#ifdef __linux__
+#include <sys/sysinfo.h>
+#elif defined(__APPLE__)
+#include <sys/sysctl.h>
+#endif
+
 unsigned int MessageBase::s_messageCount = 0;
 Debugger* Debugger::debugger = nullptr;
 
@@ -533,11 +539,28 @@ static HRESULT CreateRuntime(JsRuntimeHandle *runtime)
     // in case we use that `not actually available` memory address.
     // (See posix man malloc and OOM)
 
+#if defined(__APPLE__) || defined(__linux__)
     size_t memoryLimit;
-    if (PlatformAgnostic::SystemInfo::GetTotalRam(&memoryLimit))
-    {
-        IfJsErrorFailLog(ChakraRTInterface::JsSetRuntimeMemoryLimit(*runtime, memoryLimit));
+#ifdef __APPLE__
+    int totalRamHW[] = { CTL_HW, HW_MEMSIZE };
+    size_t length = sizeof(memoryLimit);
+    if (sysctl(totalRamHW, 2, &totalRam, &length, NULL, 0) == -1) {
+        memoryLimit = 0;
     }
+#else
+    struct sysinfo sysInfo;
+    if (sysinfo(&sysInfo) == -1)
+    {
+        memoryLimit = 0;
+    }
+    else
+    {
+        memoryLimit = sysInfo.totalram;
+    }
+#endif
+    
+    IfJsErrorFailLog(ChakraRTInterface::JsSetRuntimeMemoryLimit(*runtime, memoryLimit));
+#endif
 #endif
     hr = S_OK;
 Error:
