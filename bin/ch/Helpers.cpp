@@ -556,10 +556,9 @@ void GetBinaryPathWithFileNameA(char *path, const size_t buffer_size, const char
     char dir[_MAX_DIR];
 
     char modulename[_MAX_PATH];
-    charcount_t modulenameLength = 0;
 
-    HRESULT hr = ChakraRTInterface::GetBinaryLocation(modulename, _countof(modulename), &modulenameLength);
-    if (FAILED(hr)) 
+    DWORD dwResult = GetModuleFileNameA(NULL, modulename, _countof(modulename) - 1);
+    if (dwResult == 0)
     {
         path[0] = '\0';
         return;
