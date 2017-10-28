@@ -8,15 +8,4 @@
 
 namespace PlatformAgnostic
 {
-    bool SystemInfo::GetMaxVirtualMemory(size_t *totalAS)
-    {
-        struct rlimit limit;
-        if (getrlimit(RLIMIT_AS, &limit) != 0)
-        {
-            return false;
-        }
-
-        *totalAS = limit.rlim_cur;
-        return true;
-    }
 }

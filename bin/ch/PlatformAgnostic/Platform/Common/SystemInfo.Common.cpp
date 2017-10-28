@@ -6,7 +6,7 @@
 #if defined(__APPLE__) || defined(__linux)
 #include <CommonPal.h>
 #include "../../lib/Common/Core/CommonTypedefs.h"
-#include "../../lib/Common/PlatformAgnostic/SystemInfo.h"
+#include "../../ChPlatformAgnostic.h"
 
 #if defined(__APPLE__)
 #include <mach-o/dyld.h> // _NSGetExecutablePath
@@ -17,9 +17,9 @@
 // Defined in PAL
 extern errno_t __cdecl strcpy_s(char *_Dst, size_t _SizeInBytes, const char *_Src);
 
-namespace PlatformAgnostic
+namespace ChPlatformAgnostic
 {
-    bool SystemInfo::GetBinaryLocation(char* const path, const charcount_t size, charcount_t* const resultStrLength)
+    bool Module::GetBinaryLocation(char* const path, const charcount_t size, charcount_t* const resultStrLength)
     {
         if (path == nullptr || resultStrLength == nullptr || size > UINT_MAX) return false;
 

@@ -3,6 +3,7 @@
 // Licensed under the MIT license. See LICENSE.txt file in the project root for full license information.
 //-------------------------------------------------------------------------------------------------------
 #include "stdafx.h"
+#include "PlatformAgnostic/ChPlatformAgnostic.h"
 
 #include <sys/stat.h>
 
@@ -556,9 +557,10 @@ void GetBinaryPathWithFileNameA(char *path, const size_t buffer_size, const char
     char dir[_MAX_DIR];
 
     char modulename[_MAX_PATH];
+    charcount_t pathLength;
 
-    DWORD dwResult = GetModuleFileNameA(NULL, modulename, _countof(modulename) - 1);
-    if (dwResult == 0)
+    bool result = ChPlatformAgnostic::Module::GetBinaryLocation(modulename, _countof(modulename) - 1, &pathLength);
+    if (!result)
     {
         path[0] = '\0';
         return;

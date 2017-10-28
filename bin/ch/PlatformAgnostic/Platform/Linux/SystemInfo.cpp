@@ -4,19 +4,10 @@
 //-------------------------------------------------------------------------------------------------------
 
 #ifdef __linux__
+#include <ChPlatformAgnostic.h>
 #include <sys/resource.h>
 
-namespace PlatformAgnostic
+namespace ChPlatformAgnostic
 {
-    bool SystemInfo::GetMaxVirtualMemory(size_t *totalAS)
-    {
-        struct rlimit limit;
-        if (getrlimit(RLIMIT_AS, &limit) != 0)
-        {
-            return false;
-        }
-        *totalAS = limit.rlim_cur;
-        return true;
-    }
 }
 #endif

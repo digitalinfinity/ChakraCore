@@ -4,7 +4,8 @@
 //-------------------------------------------------------------------------------------------------------
 #pragma once
 
-#include <Core/CommonTypedefs.h>
+#include <uchar.h>
+typedef unsigned __int32 charcount_t;
 
 namespace ChPlatformAgnostic
 {

@@ -7,16 +7,16 @@ set(ch_source_files
   HostConfigFlags.cpp
   WScriptJsrt.cpp
   RuntimeThreadData.cpp
-  PlatformAgnostic\Platform\Common\SystemInfo.Common.cpp
+  PlatformAgnostic/Platform/Common/SystemInfo.Common.cpp
   )
 
 if(CC_TARGET_OS_LINUX)
   set(ch_source_files "${ch_source_files}"
-    PlatformAgnostic\Platform\Linux\SystemInfo.cpp
+    PlatformAgnostic/Platform/Linux/SystemInfo.cpp
     )
 elseif(CC_TARGET_OS_OSX)
   set(ch_source_files "${ch_source_files}"
-    PlatformAgnostic\Platform\Unix\SystemInfo.cpp
+    PlatformAgnostic/Platform/Unix/SystemInfo.cpp
     )
 endif()
 
@@ -41,6 +41,7 @@ endif()
 
 target_include_directories (ch
   PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}
+  PlatformAgnostic
   ../ChakraCore
   ../../lib/Common
   ../../lib/Jsrt

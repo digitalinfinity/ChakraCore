@@ -9,14 +9,6 @@
 
 namespace PlatformAgnostic
 {
-    bool SystemInfo::GetMaxVirtualMemory(size_t *totalAS)
-    {
-        SYSTEM_INFO info;
-        GetSystemInfo(&info);
-        *totalAS = (size_t) info.lpMaximumApplicationAddress;
-        return true;
-    }
-
 #define SET_BINARY_PATH_ERROR_MESSAGE(path, msg) \
     str_len = (int) strlen(msg);                 \
     memcpy((char*) path, msg, (size_t)str_len);          \
