@@ -7,7 +7,6 @@ set(ch_source_files
   HostConfigFlags.cpp
   WScriptJsrt.cpp
   RuntimeThreadData.cpp
-  PlatformAgnostic/Platform/Common/SystemInfo.Common.cpp
   )
 
 if(CC_TARGET_OS_LINUX)
