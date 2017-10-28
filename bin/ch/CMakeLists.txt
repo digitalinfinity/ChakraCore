@@ -7,7 +7,18 @@ set(ch_source_files
   HostConfigFlags.cpp
   WScriptJsrt.cpp
   RuntimeThreadData.cpp
+  PlatformAgnostic\Platform\Common\SystemInfo.Common.cpp
   )
+
+if(CC_TARGET_OS_LINUX)
+  set(ch_source_files "${ch_source_files}"
+    PlatformAgnostic\Platform\Linux\SystemInfo.cpp
+    )
+elseif(CC_TARGET_OS_OSX)
+  set(ch_source_files "${ch_source_files}"
+    PlatformAgnostic\Platform\Unix\SystemInfo.cpp
+    )
+endif()
 
 if (STATIC_LIBRARY)
   set(ch_source_files "${ch_source_files}"
