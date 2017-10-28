@@ -10,6 +10,5 @@ namespace PlatformAgnostic
     {
     public:
         static bool GetMaxVirtualMemory(size_t *totalAS);
-        static bool GetBinaryLocation(char* const path, const charcount_t size, charcount_t* const resultStrLength);
     };
 } // namespace PlatformAgnostic

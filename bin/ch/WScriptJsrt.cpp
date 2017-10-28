@@ -4,6 +4,7 @@
 //-------------------------------------------------------------------------------------------------------
 #include "stdafx.h"
 #include <vector>
+#include <PlatformAgnostic/ChPlatformAgnostic.h>
 
 #if defined(_X86_) || defined(_M_IX86)
 #define CPU_ARCH_TEXT "x86"
@@ -891,9 +892,9 @@ bool WScriptJsrt::Initialize()
       linkValue, true), false);
 
     // Set Binary Location
-    IfFailGo(ChakraRTInterface::GetBinaryLocation(chBinaryLocation, _countof(chBinaryLocation), &chBinaryLocationLength));
-
     JsValueRef binaryPathValue;
+    IfFalseGo(ChPlatformAgnostic::Module::GetBinaryLocation(chBinaryLocation, _countof(chBinaryLocation), &chBinaryLocationLength));
+
     JsPropertyIdRef binaryPathProperty;
     IfJsrtErrorFail(CreatePropertyIdFromString("BINARY_PATH", &binaryPathProperty), false);
 

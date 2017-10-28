@@ -3,18 +3,17 @@
 // Licensed under the MIT license. See LICENSE.txt file in the project root for full license information.
 //-------------------------------------------------------------------------------------------------------
 
-#include "RuntimePlatformAgnosticPch.h"
+#include "PlatformAgnostic/ChPlatformAgnostic.h"
 #include "Common.h"
-#include "ChakraPlatform.h"
 
-namespace PlatformAgnostic
+namespace ChPlatformAgnostic
 {
 #define SET_BINARY_PATH_ERROR_MESSAGE(path, msg) \
     str_len = (int) strlen(msg);                 \
     memcpy((char*) path, msg, (size_t)str_len);          \
     path[str_len] = char(0)
 
-    bool SystemInfo::GetBinaryLocation(char* const path, const charcount_t size, charcount_t* const resultStrLength)
+    bool Module::GetBinaryLocation(char* const path, const charcount_t size, charcount_t* const resultStrLength)
     {
         size_t bufferSize = sizeof(WCHAR) * size;
         DWORD str_len;
