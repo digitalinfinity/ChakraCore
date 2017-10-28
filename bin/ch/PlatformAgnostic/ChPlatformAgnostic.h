@@ -4,7 +4,6 @@
 //-------------------------------------------------------------------------------------------------------
 #pragma once
 
-#include <uchar.h>
 typedef unsigned __int32 charcount_t;
 
 namespace ChPlatformAgnostic
@@ -14,4 +13,4 @@ namespace ChPlatformAgnostic
     public:
         static bool GetBinaryLocation(char* const path, const charcount_t size, charcount_t* const resultStrLength);
     };
-} // namespace PlatformAgnostic
+} // namespace ChPlatformAgnostic

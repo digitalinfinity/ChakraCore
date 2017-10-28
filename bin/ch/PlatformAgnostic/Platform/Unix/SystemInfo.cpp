@@ -7,13 +7,13 @@
 #include <ChPlatformAgnostic.h>
 #include <mach-o/dyld.h> // _NSGetExecutablePath
 
-namespace PlatformAgnostic
+namespace ChPlatformAgnostic
 {
     bool Module::GetBinaryLocation(char* const path, const charcount_t size, charcount_t* const resultStrLength)
     {
         if (path == nullptr || resultStrLength == nullptr || size > UINT_MAX) return false;
 
-        char executablePath[PATH_MAX]
+        char executablePath[PATH_MAX];
         uint32_t path_size = _countof(executablePath);
         if (_NSGetExecutablePath(executablePath, &path_size))
         {

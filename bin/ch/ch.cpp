@@ -531,7 +531,6 @@ Error:
 static HRESULT CreateRuntime(JsRuntimeHandle *runtime)
 {
     HRESULT hr = E_FAIL;
-    IfJsErrorFailLog(ChakraRTInterface::JsCreateRuntime(jsrtAttributes, nullptr, runtime));
 
 #ifndef _WIN32
     // On Posix, malloc may not return NULL even if there is no
@@ -544,7 +543,7 @@ static HRESULT CreateRuntime(JsRuntimeHandle *runtime)
 #ifdef __APPLE__
     int totalRamHW[] = { CTL_HW, HW_MEMSIZE };
     size_t length = sizeof(memoryLimit);
-    if (sysctl(totalRamHW, 2, &totalRam, &length, NULL, 0) == -1) {
+    if (sysctl(totalRamHW, 2, &memoryLimit, &length, NULL, 0) == -1) {
         memoryLimit = 0;
     }
 #else
@@ -558,10 +557,14 @@ static HRESULT CreateRuntime(JsRuntimeHandle *runtime)
         memoryLimit = sysInfo.totalram;
     }
 #endif
-    
+#endif
+#endif
+
+    IfJsErrorFailLog(ChakraRTInterface::JsCreateRuntime(jsrtAttributes, nullptr, runtime));
+#ifndef _WIN32
     IfJsErrorFailLog(ChakraRTInterface::JsSetRuntimeMemoryLimit(*runtime, memoryLimit));
 #endif
-#endif
+
     hr = S_OK;
 Error:
     return hr;
