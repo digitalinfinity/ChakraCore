@@ -2353,6 +2353,10 @@ void BailOutRecord::ScheduleFunctionCodeGen(Js::ScriptFunction * function, Js::S
         function->GetFunctionBody()->GetDisplayName(), ::GetBailOutKindName(bailOutKind), bailOutRecord->bailOutCount, callsCount,
         GetRejitReasonName(rejitReason), reThunk ? trueString : falseString);
 
+    JS_ETW(EventWriteJSCRIPT_BACKEND_BAILOUT(function->GetFunctionBody()->GetLocalFunctionId(),
+        function->GetFunctionBody()->GetSourceContextId(), function->GetFunctionBody()->GetDisplayName(), ::GetBailOutKindName(bailOutKind), bailOutRecord->bailOutCount, callsCount,
+        GetRejitReasonName(rejitReason), reThunk ? trueString : falseString));
+
 #ifdef REJIT_STATS
     executeFunction->GetScriptContext()->LogBailout(executeFunction, bailOutKind);
     if (bailOutRecord->bailOutCount > 500)

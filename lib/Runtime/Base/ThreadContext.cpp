@@ -3091,30 +3091,34 @@ ThreadContext::ClearScriptContextCaches()
 void
 ThreadContext::ClearInlineCachesWithDeadWeakRefs()
 {
+    size_t allocatedSize = 0;
+    size_t preClearFreeListSize = 0;
+    size_t freeListSize = 0;
+    size_t polyInlineCacheSize = 0;
+    uint scriptContextCount = 0;
+
+    // TODO: CHange me
+    JS_ETW(EventWriteJSCRIPT_CLEAR_INLINECACHE_START(this, 0));
+
     for (Js::ScriptContext *scriptContext = scriptContextList; scriptContext != nullptr; scriptContext = scriptContext->next)
     {
+        scriptContextCount++;
+
+        allocatedSize += scriptContext->GetInlineCacheAllocator()->AllocatedSize();
+
+        preClearFreeListSize += scriptContext->GetInlineCacheAllocator()->FreeListSize();
         scriptContext->ClearInlineCachesWithDeadWeakRefs();
+        freeListSize += scriptContext->GetInlineCacheAllocator()->FreeListSize();;
+
+        polyInlineCacheSize += scriptContext->GetInlineCacheAllocator()->GetPolyInlineCacheSize();
     }
+
+    JS_ETW(EventWriteJSCRIPT_CLEAR_INLINECACHE_STOP(this, scriptContextCount, (uint) allocatedSize, (uint) preClearFreeListSize, (uint) freeListSize, (uint) polyInlineCacheSize));
 
     if (PHASE_TRACE1(Js::InlineCachePhase))
     {
-        size_t size = 0;
-        size_t freeListSize = 0;
-        size_t polyInlineCacheSize = 0;
-        uint scriptContextCount = 0;
-        for (Js::ScriptContext *scriptContext = scriptContextList;
-            scriptContext;
-            scriptContext = scriptContext->next)
-        {
-            scriptContextCount++;
-            size += scriptContext->GetInlineCacheAllocator()->AllocatedSize();
-            freeListSize += scriptContext->GetInlineCacheAllocator()->FreeListSize();
-#ifdef POLY_INLINE_CACHE_SIZE_STATS
-            polyInlineCacheSize += scriptContext->GetInlineCacheAllocator()->GetPolyInlineCacheSize();
-#endif
-        };
         Output::Print(_u("Inline cache arena: total = %5I64u KB, free list = %5I64u KB, poly caches = %5I64u KB, script contexts = %u\n"),
-            static_cast<uint64>(size / 1024), static_cast<uint64>(freeListSize / 1024), static_cast<uint64>(polyInlineCacheSize / 1024), scriptContextCount);
+            static_cast<uint64>(allocatedSize / 1024), static_cast<uint64>(freeListSize / 1024), static_cast<uint64>(polyInlineCacheSize / 1024), scriptContextCount);
     }
 }
 

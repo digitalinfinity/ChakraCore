@@ -3133,10 +3133,17 @@ Recycler::SweepWeakReference()
     RECYCLER_PROFILE_EXEC_BEGIN(this, Js::SweepWeakPhase);
     GCETW(GC_SWEEP_WEAKREF_START, (this));
 
+#ifdef GCETW
+    uint scannedCount = 0;
+    uint keptCount = 0;
+#endif
+
     // REVIEW: Clean up the weak reference map concurrently?
     bool hasCleanup = false;
-    weakReferenceMap.Map([&hasCleanup](RecyclerWeakReferenceBase * weakRef) -> bool
+    weakReferenceMap.Map([&hasCleanup, &scannedCount, &keptCount](RecyclerWeakReferenceBase * weakRef) -> bool
     {
+        scannedCount++;
+
         if (!weakRef->weakRefHeapBlock->TestObjectMarkedBit(weakRef))
         {
             hasCleanup = true;
@@ -3158,11 +3165,15 @@ Recycler::SweepWeakReference()
         }
 
         // Keep
+        keptCount++;
         return true;
     });
     this->weakReferenceCleanupId += hasCleanup;
 
-    GCETW(GC_SWEEP_WEAKREF_STOP, (this));
+    const uint scannedBytes = scannedCount * sizeof(RecyclerWeakReferenceBase*);
+    const uint cleanedBytes = (scannedCount - keptCount) * sizeof(RecyclerWeakReferenceBase*);
+
+    GCETW(GC_SWEEP_WEAKREF_STOP, (this, scannedBytes, cleanedBytes));
     RECYCLER_PROFILE_EXEC_END(this, Js::SweepWeakPhase);
 }
 
